@@ -1,16 +1,33 @@
 import React, { useEffect } from 'react'
 import { Button, Form, Input } from "antd";
 import { Link , useNavigate } from "react-router-dom";
+import { loginUser } from '../calls/Users';
 
 import {message} from 'antd'
 
 
 function Login() {
-  
+  const navigate = useNavigate()
   const onFinish = async (values)=>{
     console.log(values)
+    try {
+      const response = await loginUser(values);
+      if (response.success) {
+        message.success(response.message);
+        localStorage.setItem('token', response.token);
+        navigate('/');
+      } else {
+        message.error(response.message);
+      }
+    }
+    catch (error) {
+      console.log(error);
+      message.error(error.message);
+    }
    
   }
+
+
 
  
   return (
